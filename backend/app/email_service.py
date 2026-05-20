@@ -59,7 +59,7 @@ def send_verification_email(*, to_email: str, name: str, token: str) -> None:
         f"This link expires in 24 hours. If you did not create this account, ignore this email.\n"
     )
     html_body = (
-        f"<p>Hi {name},</p>"
+        f"<p>Hi {escape(name)},</p>"
         f"<p>Welcome to PhlowBooks. Please verify your email by clicking the link below:</p>"
         f'<p><a href="{verify_link}">Verify my email</a></p>'
         f"<p>This link expires in 24 hours. If you did not create this account, ignore this email.</p>"
