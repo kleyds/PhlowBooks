@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import Home from './views/Home.vue'
 import Products from './views/Products.vue'
-import Phlow from './views/Phlow.vue'
+import PhlowBooks from './views/PhlowBooks.vue'
 import Docs from './views/Docs.vue'
 import About from './views/About.vue'
 import Login from './views/Login.vue'
@@ -26,7 +26,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: Home },
     { path: '/products', name: 'products', component: Products },
-    { path: '/phlow', name: 'phlow', component: Phlow },
+    { path: '/phlowbooks', name: 'phlowbooks', component: PhlowBooks },
     { path: '/docs', name: 'docs', component: Docs },
     { path: '/about', name: 'about', component: About },
     { path: '/login', name: 'login', component: Login },

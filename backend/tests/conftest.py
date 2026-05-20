@@ -31,7 +31,7 @@ def db_session(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[Ses
     monkeypatch.setenv("UPLOAD_DIR", str(upload_dir))
 
     engine = create_engine(
-        f"sqlite:///{tmp_path / 'phlow-test.db'}",
+        f"sqlite:///{tmp_path / 'phlowbooks-test.db'}",
         connect_args={"check_same_thread": False},
     )
     TestingSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)

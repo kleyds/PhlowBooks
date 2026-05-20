@@ -1,7 +1,7 @@
 <template>
   <div class="auth-page">
     <section class="auth-panel">
-      <p class="eyebrow">Phlow</p>
+      <p class="eyebrow">PhlowBooks</p>
       <h1>Log in</h1>
       <form @submit.prevent="onSubmit">
         <label>
@@ -28,7 +28,7 @@
         </button>
       </form>
       <p class="switch">
-        New to Phlow?
+        New to PhlowBooks?
         <router-link to="/signup">Create an account</router-link>
       </p>
     </section>

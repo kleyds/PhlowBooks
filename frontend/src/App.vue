@@ -7,7 +7,7 @@
     </main>
     <footer v-if="!isReviewRoute">
       <div class="container">
-        <p>&copy; 2026 Phlow &middot; Bookkeeping infrastructure for PH firms.</p>
+        <p>&copy; 2026 PhlowBooks &middot; Bookkeeping infrastructure for PH firms.</p>
       </div>
     </footer>
   </div>

@@ -2,14 +2,14 @@
   <div>
     <section class="hero">
       <div class="container">
-        <span class="badge">Phlow &middot; bookkeeping infrastructure for PH firms</span>
+        <span class="badge">PhlowBooks &middot; bookkeeping infrastructure for PH firms</span>
         <h1>Receipts in.<br />Clean entries out.</h1>
         <p class="lead">
-          Phlow turns receipts, invoices, wallet screenshots, and bank documents into clean
+          PhlowBooks turns receipts, invoices, wallet screenshots, and bank documents into clean
           accounting entries for Filipino bookkeepers and accounting firms.
         </p>
         <div class="cta">
-          <router-link to="/phlow" class="btn">Explore Phlow</router-link>
+          <router-link to="/phlowbooks" class="btn">Explore PhlowBooks</router-link>
           <router-link to="/about" class="btn secondary">About us</router-link>
         </div>
       </div>
@@ -36,9 +36,9 @@
         <router-link to="/products" class="see-all">See the workflow &rarr;</router-link>
       </div>
       <div class="grid">
-        <router-link to="/phlow" class="product-card">
+        <router-link to="/phlowbooks" class="product-card">
           <div class="product-icon">₱</div>
-          <h3>Phlow</h3>
+          <h3>PhlowBooks</h3>
           <p>Bookkeeping infrastructure for Filipino accounting firms. Receipts in, clean entries out.</p>
           <span class="status live">Private beta</span>
         </router-link>

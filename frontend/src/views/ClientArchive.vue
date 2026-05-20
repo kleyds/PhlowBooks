@@ -457,7 +457,7 @@ function buildFilterParams() {
 
 function exportFilename() {
   const month = filters.month || 'all'
-  return `phlow-${clientId}-${exportFormat.value}-${month}.csv`
+  return `phlowbooks-${clientId}-${exportFormat.value}-${month}.csv`
 }
 
 function handleError(err) {

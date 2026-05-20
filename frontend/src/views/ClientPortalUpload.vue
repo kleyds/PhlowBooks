@@ -3,7 +3,7 @@
     <main class="portal-shell">
       <section class="card upload-card">
         <header>
-          <p class="brand">Phlow</p>
+          <p class="brand">PhlowBooks</p>
           <h1 v-if="info">{{ info.client_name }}</h1>
           <p v-if="info?.label" class="label">{{ info.label }}</p>
         </header>
@@ -114,7 +114,7 @@
         </form>
       </section>
     </main>
-    <p class="footer">Secured by Phlow · <router-link to="/">phlow.app</router-link></p>
+    <p class="footer">Secured by PhlowBooks · <router-link to="/">phlowbooks.app</router-link></p>
   </div>
 </template>
 

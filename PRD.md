@@ -1,18 +1,18 @@
 # Product Requirements Document
-## Phlow — Bookkeeping Infrastructure for Filipino Accounting Firms
-**Version:** 0.1 · **Status:** Pre-MVP · **Product:** Phlow (`phlow.app`)
+## PhlowBooks — Bookkeeping Infrastructure for Filipino Accounting Firms
+**Version:** 0.1 · **Status:** Pre-MVP · **Product:** PhlowBooks (`phlowbooks.app`)
 
 ---
 
 ## 1. Overview
 
-Phlow is a hosted SaaS product that turns receipts, invoices, and bank statements into clean accounting entries for Filipino bookkeepers and accounting firms. It replaces the manual process of typing receipts one-by-one into QuickBooks, Xero, or JuanTax.
+PhlowBooks is a hosted SaaS product that turns receipts, invoices, and bank statements into clean accounting entries for Filipino bookkeepers and accounting firms. It replaces the manual process of typing receipts one-by-one into QuickBooks, Xero, or JuanTax.
 
 **Tagline:** *"Stop typing resibos."*
 
-**Live site (frontend):** `phlow.app`
-**API base URL (backend):** `api.phlow.app`
-**GitHub:** `https://github.com/kleyds/phlow` (private)
+**Live site (frontend):** `phlowbooks.app`
+**API base URL (backend):** `api.phlowbooks.app`
+**GitHub:** `https://github.com/kleyds/phlowbooks` (private)
 
 ---
 
@@ -80,7 +80,7 @@ Global tools (Hubdoc, Dext, Textract) are priced in USD, built for North America
 - **HTTP client:** Native `fetch` — Axios not installed yet
 
 ### Infrastructure
-- **v0:** Self-hosted on mini PC, domain `phlow.app`
+- **v0:** Self-hosted on mini PC, domain `phlowbooks.app`
 - **v1:** Cloudflare in front (TLS, DDoS protection, hides origin IP)
 - **Reverse proxy:** Nginx or Caddy
 
@@ -90,7 +90,7 @@ Global tools (Hubdoc, Dext, Textract) are priced in USD, built for North America
 
 ### Directory structure
 ```
-phlow/
+phlowbooks/
 ├── README.md
 ├── PRD.md                          ← this file
 ├── .gitignore
@@ -115,20 +115,20 @@ phlow/
         ├── style.css               ← Global CSS variables (dark theme)
         ├── App.vue                 ← Layout shell: Nav + <router-view> + footer
         ├── components/
-        │   └── Nav.vue             ← Top nav: Phlow brand + Platform/Docs/About links
+        │   └── Nav.vue             ← Top nav: PhlowBooks brand + Platform/Docs/About links
         └── views/
-            ├── Home.vue            ← Phlow landing (/)
+            ├── Home.vue            ← PhlowBooks landing (/)
             ├── Products.vue        ← Platform overview (/products)
-            ├── Phlow.vue           ← Phlow product page (/phlow) — waitlist form
-            ├── Docs.vue            ← Phlow API docs (/docs)
+            ├── PhlowBooks.vue           ← PhlowBooks product page (/phlowbooks) — waitlist form
+            ├── Docs.vue            ← PhlowBooks API docs (/docs)
             └── About.vue           ← Product/company about (/about)
 ```
 
 ### What's already working
 - `POST /v1/extract-receipt` — upload a JPEG/PNG/WebP receipt, get back `raw_text` + structured `ReceiptData` (vendor, date, currency, subtotal, tax, total, line_items).
 - Single hardcoded `API_KEY` auth via `x-api-key` header.
-- Vue frontend with 5 routes: `/`, `/products`, `/phlow`, `/docs`, `/about`.
-- Waitlist email form on `/phlow` (UI only — not wired to backend yet).
+- Vue frontend with 5 routes: `/`, `/products`, `/phlowbooks`, `/docs`, `/about`.
+- Waitlist email form on `/phlowbooks` (UI only — not wired to backend yet).
 
 ### Current schemas (`backend/app/schemas.py`)
 ```python
@@ -390,8 +390,8 @@ Build these only after 10+ paying customers.
 
 | # | Feature | Description |
 |---|---|---|
-| 9 | **Client portal** | Free per-client URL (`phlow.app/c/{token}`). SMB owner uploads receipts directly. Bookkeeper gets them in their queue. No login required for client. |
-| 10 | **Email-to-upload** | Unique inbound email per client (e.g. `abc123@in.phlow.app`). Client forwards receipt emails. Attachments auto-enqueued. |
+| 9 | **Client portal** | Free per-client URL (`phlowbooks.app/c/{token}`). SMB owner uploads receipts directly. Bookkeeper gets them in their queue. No login required for client. |
+| 10 | **Email-to-upload** | Unique inbound email per client (e.g. `abc123@in.phlowbooks.app`). Client forwards receipt emails. Attachments auto-enqueued. |
 | 11 | **Bank statement parsing** | Upload BPI/BDO/Metrobank/GCash/Maya PDF statements. Extract transaction rows. Match against receipts. |
 | 12 | **Auto-categorization** | Suggest expense category (Transport, Meals, Office Supplies, Utilities, etc.) from vendor name using OpenAI. Bookkeeper can override. |
 | 13 | **VAT sanity check** | Flag receipts where `vat_amount ≠ vatable_amount × 0.12` (within ₱1 tolerance). |
@@ -411,7 +411,7 @@ Build these only after 10+ paying customers.
 - ❌ Multi-currency conversion
 - ❌ Financial reporting / P&L / balance sheets
 
-Phlow is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, JuanTax) remains the system of record.
+PhlowBooks is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, JuanTax) remains the system of record.
 
 ---
 
@@ -419,10 +419,10 @@ Phlow is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, JuanTax)
 
 ```
 Public (no auth required):
-/                          Phlow landing
+/                          PhlowBooks landing
 /products                  Platform overview
-/phlow                 Phlow marketing + waitlist
-/docs                      Phlow API docs
+/phlowbooks                 PhlowBooks marketing + waitlist
+/docs                      PhlowBooks API docs
 /about                     Product/company about
 
 Auth:
@@ -573,10 +573,10 @@ TESSERACT_CMD=                       # full path on Windows, blank elsewhere
 UPLOAD_DIR=./uploads
 MAX_FILE_SIZE_MB=20
 MAX_FILES_PER_UPLOAD=50
-DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/phlow
+DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/phlowbooks
 PAYMONGO_SECRET_KEY=sk_...
 PAYMONGO_WEBHOOK_SECRET=whsec_...
-CORS_ORIGINS=http://localhost:5173,https://phlow.app
+CORS_ORIGINS=http://localhost:5173,https://phlowbooks.app
 ```
 
 ---

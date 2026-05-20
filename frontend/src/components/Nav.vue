@@ -3,7 +3,7 @@
     <div class="container nav-inner">
       <router-link :to="isAppRoute ? '/app' : '/'" class="brand">
         <span class="logo">P</span>
-        <span>Phlow</span>
+        <span>PhlowBooks</span>
       </router-link>
       <div v-if="isAppRoute" class="links app-links">
         <router-link to="/app/clients/new" class="primary-link">New client</router-link>

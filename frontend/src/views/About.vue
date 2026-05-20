@@ -1,9 +1,9 @@
 <template>
   <div class="container about">
     <header>
-      <h1>About Phlow</h1>
+      <h1>About PhlowBooks</h1>
       <p class="lead">
-        Phlow is bookkeeping infrastructure for Filipino accounting firms: intake, extraction,
+        PhlowBooks is bookkeeping infrastructure for Filipino accounting firms: intake, extraction,
         review, reconciliation, and compliance support in one focused workspace.
       </p>
     </header>
@@ -17,7 +17,7 @@
         for them.
       </p>
       <p>
-        Phlow builds the missing layer: opinionated, locally-aware tools that fit the
+        PhlowBooks builds the missing layer: opinionated, locally-aware tools that fit the
         way work actually happens here.
       </p>
     </section>
@@ -57,7 +57,7 @@
         We work with a small group of design partners before public release.
       </p>
       <p>
-        <a href="mailto:hello@phlow.app">hello@phlow.app</a>
+        <a href="mailto:hello@phlowbooks.app">hello@phlowbooks.app</a>
         &middot;
         <a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a>
       </p>

@@ -10,7 +10,7 @@ from sqlalchemy.schema import DDL
 def _database_url() -> str:
     return os.getenv(
         "DATABASE_URL",
-        "postgresql+psycopg2://phlow:phlow@localhost:5432/phlow",
+        "postgresql+psycopg2://phlowbooks:phlowbooks@localhost:5432/phlowbooks",
     )
 
 

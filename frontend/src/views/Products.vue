@@ -3,18 +3,18 @@
     <header>
       <h1>Platform</h1>
       <p class="lead">
-        Phlow gives accounting firms a focused workflow for intake, extraction, review,
+        PhlowBooks gives accounting firms a focused workflow for intake, extraction, review,
         reconciliation, compliance exports, and client uploads.
       </p>
     </header>
 
     <div class="grid">
-      <router-link to="/phlow" class="card">
+      <router-link to="/phlowbooks" class="card">
         <div class="card-head">
           <div class="icon">₱</div>
           <span class="status live">Pre-MVP</span>
         </div>
-        <h2>Phlow</h2>
+        <h2>PhlowBooks</h2>
         <p class="tagline">Bookkeeping infrastructure for Filipino accounting firms.</p>
         <p class="desc">
           Receipts, invoices, wallet screenshots, and bank documents turned into

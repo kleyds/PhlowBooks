@@ -1,16 +1,16 @@
-# Phlow
+# PhlowBooks
 
 Bookkeeping infrastructure for Filipino bookkeepers, accountants, and SMBs.
 
 This monorepo contains:
 
-- `frontend/` - Phlow marketing site and web app.
-- `backend/` - Phlow API built with FastAPI, SQLAlchemy on PostgreSQL, Tesseract OCR, and OpenAI extraction.
-- `PHLOW_HANDOFF.md` - implementation handoff and next-work checklist.
+- `frontend/` - PhlowBooks marketing site and web app.
+- `backend/` - PhlowBooks API built with FastAPI, SQLAlchemy on PostgreSQL, Tesseract OCR, and OpenAI extraction.
+- `PHLOWBOOKS_HANDOFF.md` - implementation handoff and next-work checklist.
 
-## Phlow
+## PhlowBooks
 
-Phlow is bookkeeping infrastructure for Filipino accounting firms. It currently supports:
+PhlowBooks is bookkeeping infrastructure for Filipino accounting firms. It currently supports:
 
 - Bookkeeper signup with email verification + JWT login.
 - Multi-client workspace.
@@ -45,8 +45,8 @@ PDF files are stored and previewed in-app as rendered page images with page navi
    - Windows: install via the EnterpriseDB installer.
    - Create a database and role, e.g.:
      ```sql
-     CREATE ROLE phlow WITH LOGIN PASSWORD 'phlow';
-     CREATE DATABASE phlow OWNER phlow;
+     CREATE ROLE phlowbooks WITH LOGIN PASSWORD 'phlowbooks';
+     CREATE DATABASE phlowbooks OWNER phlowbooks;
      ```
 4. Tesseract OCR.
    - Windows: install from UB-Mannheim builds and set `TESSERACT_CMD` if it is not on PATH.
@@ -81,7 +81,7 @@ MAX_FILE_SIZE_MB=20
 MAX_FILES_PER_UPLOAD=50
 
 # PostgreSQL is required.
-DATABASE_URL=postgresql+psycopg2://phlow:phlow@localhost:5432/phlow
+DATABASE_URL=postgresql+psycopg2://phlowbooks:phlowbooks@localhost:5432/phlowbooks
 
 # SMTP for verification emails. With Gmail, SMTP_USER is your address
 # and SMTP_PASSWORD is a 16-character Google App Password.
@@ -98,7 +98,7 @@ FRONTEND_BASE_URL=http://localhost:5174
 > before starting the backend and set `DATABASE_URL` accordingly:
 >
 > ```text
-> DATABASE_URL=postgresql+psycopg2://user:pass@localhost:5432/phlow
+> DATABASE_URL=postgresql+psycopg2://user:pass@localhost:5432/phlowbooks
 > ```
 
 > If `SMTP_HOST` is unset, registration still succeeds and the verification link is
@@ -155,7 +155,7 @@ Key routes:
 
 - `/`
 - `/products`
-- `/phlow`
+- `/phlowbooks`
 - `/docs`
 - `/login`
 - `/signup`
@@ -264,7 +264,7 @@ Legacy endpoint:
 
 ## Next Work
 
-See `PHLOW_HANDOFF.md` for the fuller handoff. High-priority next slices:
+See `PHLOWBOOKS_HANDOFF.md` for the fuller handoff. High-priority next slices:
 
 - PostgreSQL production validation.
 - OCR processing success/error regression tests.

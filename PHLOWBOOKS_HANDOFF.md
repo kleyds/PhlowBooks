@@ -1,4 +1,4 @@
-# Phlow Handoff
+# PhlowBooks Handoff
 
 ## Current State
 
@@ -15,8 +15,8 @@ Stack:
 ## Implemented
 
 ### Public/Product
-- Phlow public pages
-- Phlow product page aligned to PRD
+- PhlowBooks public pages
+- PhlowBooks product page aligned to PRD
 - API docs page
 
 ### Auth
@@ -45,7 +45,7 @@ Stack:
 - Create client page
 - Client detail page
 - Dashboard cards show real counts for unprocessed invoices, unreconciled bank entries, missing/outstanding 2307s, and total open work
-- App header keeps the Phlow brand across public and `/app` routes
+- App header keeps the PhlowBooks brand across public and `/app` routes
 - Client detail metadata is collapsed by default so upload and workflow actions stay above the fold
 - Client detail uses compact upload/workflow/portal panels with hover/focus tooltips for helper copy and a tab-like workflow navigation row
 - Client detail uses "Back to workspace" with a Yes/No confirmation modal before returning to `/app`; workflow tabs keep direct "Back to client" links

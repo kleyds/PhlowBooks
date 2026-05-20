@@ -51,16 +51,16 @@ def send_verification_email(*, to_email: str, name: str, token: str) -> None:
     config = _smtp_config()
     verify_link = f"{_frontend_base_url()}/verify-email?token={token}"
 
-    subject = "Verify your Phlow email"
+    subject = "Verify your PhlowBooks email"
     text_body = (
         f"Hi {name},\n\n"
-        f"Welcome to Phlow. Please verify your email by clicking the link below:\n\n"
+        f"Welcome to PhlowBooks. Please verify your email by clicking the link below:\n\n"
         f"{verify_link}\n\n"
         f"This link expires in 24 hours. If you did not create this account, ignore this email.\n"
     )
     html_body = (
         f"<p>Hi {name},</p>"
-        f"<p>Welcome to Phlow. Please verify your email by clicking the link below:</p>"
+        f"<p>Welcome to PhlowBooks. Please verify your email by clicking the link below:</p>"
         f'<p><a href="{verify_link}">Verify my email</a></p>'
         f"<p>This link expires in 24 hours. If you did not create this account, ignore this email.</p>"
     )
@@ -91,7 +91,7 @@ def send_portal_upload_notification(
 ) -> None:
     client_url = f"{_frontend_base_url()}/app/clients/{client_id}"
     label_text = f" via {link_label}" if link_label else ""
-    subject = f"New Phlow portal upload for {client_name}"
+    subject = f"New PhlowBooks portal upload for {client_name}"
     text_body = (
         f"Hi {bookkeeper_name},\n\n"
         f"{client_name} uploaded {file_count} file{'s' if file_count != 1 else ''}{label_text}.\n\n"
@@ -122,7 +122,7 @@ def send_portal_comment_notification(
     excerpt = comment_body.strip()
     if len(excerpt) > 180:
         excerpt = f"{excerpt[:177]}..."
-    subject = f"New Phlow portal comment for {client_name}"
+    subject = f"New PhlowBooks portal comment for {client_name}"
     text_body = (
         f"Hi {bookkeeper_name},\n\n"
         f"{commenter_name} commented on {receipt_name} for {client_name}:\n\n"

@@ -12,13 +12,13 @@
     </aside>
 
     <article>
-      <h1>Phlow API</h1>
+      <h1>PhlowBooks API</h1>
       <p class="lead">
-        For developer-savvy firms who want to call Phlow directly. Most users start with the
-        <router-link to="/phlow">web app</router-link> instead.
+        For developer-savvy firms who want to call PhlowBooks directly. Most users start with the
+        <router-link to="/phlowbooks">web app</router-link> instead.
       </p>
       <p class="lead">
-        Base URL: <code>https://api.phlow.app</code>
+        Base URL: <code>https://api.phlowbooks.app</code>
       </p>
 
       <h2 id="auth">Authentication</h2>
@@ -41,7 +41,7 @@
       </ul>
 
       <h3>cURL</h3>
-      <pre><code>curl -X POST https://api.phlow.app/v1/extract-receipt \
+      <pre><code>curl -X POST https://api.phlowbooks.app/v1/extract-receipt \
   -H "x-api-key: your-key" \
   -F "file=@receipt.jpg"</code></pre>
 
@@ -49,7 +49,7 @@
       <pre><code>const fd = new FormData()
 fd.append('file', fileInput.files[0])
 
-const res = await fetch('https://api.phlow.app/v1/extract-receipt', {
+const res = await fetch('https://api.phlowbooks.app/v1/extract-receipt', {
   method: 'POST',
   headers: { 'x-api-key': 'your-key' },
   body: fd,
@@ -61,7 +61,7 @@ const json = await res.json()</code></pre>
 
 with open('receipt.jpg', 'rb') as f:
     res = requests.post(
-        'https://api.phlow.app/v1/extract-receipt',
+        'https://api.phlowbooks.app/v1/extract-receipt',
         headers={'x-api-key': 'your-key'},
         files={'file': f},
     )
