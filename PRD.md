@@ -1,18 +1,18 @@
 # Product Requirements Document
-## PesoBooks — Bookkeeping Infrastructure for Filipino Accounting Firms
-**Version:** 0.1 · **Status:** Pre-MVP · **Studio:** Claideco (`claideco.work`)
+## Phlow — Bookkeeping Infrastructure for Filipino Accounting Firms
+**Version:** 0.1 · **Status:** Pre-MVP · **Product:** Phlow (`phlow.app`)
 
 ---
 
 ## 1. Overview
 
-PesoBooks is a hosted SaaS product that turns receipts, invoices, and bank statements into clean accounting entries for Filipino bookkeepers and accounting firms. It replaces the manual process of typing receipts one-by-one into QuickBooks, Xero, or JuanTax.
+Phlow is a hosted SaaS product that turns receipts, invoices, and bank statements into clean accounting entries for Filipino bookkeepers and accounting firms. It replaces the manual process of typing receipts one-by-one into QuickBooks, Xero, or JuanTax.
 
 **Tagline:** *"Stop typing resibos."*
 
-**Live site (frontend):** `claideco.work/pesobooks`
-**API base URL (backend):** `api.claideco.work`
-**GitHub:** `https://github.com/kleyds/claideco.work` (private)
+**Live site (frontend):** `phlow.app`
+**API base URL (backend):** `api.phlow.app`
+**GitHub:** `https://github.com/kleyds/phlow` (private)
 
 ---
 
@@ -80,7 +80,7 @@ Global tools (Hubdoc, Dext, Textract) are priced in USD, built for North America
 - **HTTP client:** Native `fetch` — Axios not installed yet
 
 ### Infrastructure
-- **v0:** Self-hosted on mini PC, domain `claideco.work`
+- **v0:** Self-hosted on mini PC, domain `phlow.app`
 - **v1:** Cloudflare in front (TLS, DDoS protection, hides origin IP)
 - **Reverse proxy:** Nginx or Caddy
 
@@ -90,7 +90,7 @@ Global tools (Hubdoc, Dext, Textract) are priced in USD, built for North America
 
 ### Directory structure
 ```
-claideco.work/
+phlow/
 ├── README.md
 ├── PRD.md                          ← this file
 ├── .gitignore
@@ -115,20 +115,20 @@ claideco.work/
         ├── style.css               ← Global CSS variables (dark theme)
         ├── App.vue                 ← Layout shell: Nav + <router-view> + footer
         ├── components/
-        │   └── Nav.vue             ← Top nav: Claideco brand + Products/Docs/About links
+        │   └── Nav.vue             ← Top nav: Phlow brand + Platform/Docs/About links
         └── views/
-            ├── Home.vue            ← Claideco studio landing (/)
-            ├── Products.vue        ← Product index (/products)
-            ├── PesoBooks.vue       ← PesoBooks product page (/pesobooks) — waitlist form
-            ├── Docs.vue            ← PesoBooks API docs (/docs)
-            └── About.vue           ← Studio about (/about)
+            ├── Home.vue            ← Phlow landing (/)
+            ├── Products.vue        ← Platform overview (/products)
+            ├── Phlow.vue           ← Phlow product page (/phlow) — waitlist form
+            ├── Docs.vue            ← Phlow API docs (/docs)
+            └── About.vue           ← Product/company about (/about)
 ```
 
 ### What's already working
 - `POST /v1/extract-receipt` — upload a JPEG/PNG/WebP receipt, get back `raw_text` + structured `ReceiptData` (vendor, date, currency, subtotal, tax, total, line_items).
 - Single hardcoded `API_KEY` auth via `x-api-key` header.
-- Vue frontend with 5 routes: `/`, `/products`, `/pesobooks`, `/docs`, `/about`.
-- Waitlist email form on `/pesobooks` (UI only — not wired to backend yet).
+- Vue frontend with 5 routes: `/`, `/products`, `/phlow`, `/docs`, `/about`.
+- Waitlist email form on `/phlow` (UI only — not wired to backend yet).
 
 ### Current schemas (`backend/app/schemas.py`)
 ```python
@@ -390,8 +390,8 @@ Build these only after 10+ paying customers.
 
 | # | Feature | Description |
 |---|---|---|
-| 9 | **Client portal** | Free per-client URL (`pesobooks.app/c/{token}`). SMB owner uploads receipts directly. Bookkeeper gets them in their queue. No login required for client. |
-| 10 | **Email-to-upload** | Unique inbound email per client (e.g. `abc123@in.pesobooks.app`). Client forwards receipt emails. Attachments auto-enqueued. |
+| 9 | **Client portal** | Free per-client URL (`phlow.app/c/{token}`). SMB owner uploads receipts directly. Bookkeeper gets them in their queue. No login required for client. |
+| 10 | **Email-to-upload** | Unique inbound email per client (e.g. `abc123@in.phlow.app`). Client forwards receipt emails. Attachments auto-enqueued. |
 | 11 | **Bank statement parsing** | Upload BPI/BDO/Metrobank/GCash/Maya PDF statements. Extract transaction rows. Match against receipts. |
 | 12 | **Auto-categorization** | Suggest expense category (Transport, Meals, Office Supplies, Utilities, etc.) from vendor name using OpenAI. Bookkeeper can override. |
 | 13 | **VAT sanity check** | Flag receipts where `vat_amount ≠ vatable_amount × 0.12` (within ₱1 tolerance). |
@@ -411,7 +411,7 @@ Build these only after 10+ paying customers.
 - ❌ Multi-currency conversion
 - ❌ Financial reporting / P&L / balance sheets
 
-PesoBooks is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, JuanTax) remains the system of record.
+Phlow is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, JuanTax) remains the system of record.
 
 ---
 
@@ -419,11 +419,11 @@ PesoBooks is a **receipt-to-entry feeder**. Accounting software (QBO, Xero, Juan
 
 ```
 Public (no auth required):
-/                          Claideco studio landing
-/products                  Product index
-/pesobooks                 PesoBooks marketing + waitlist
-/docs                      PesoBooks API docs
-/about                     Studio about
+/                          Phlow landing
+/products                  Platform overview
+/phlow                 Phlow marketing + waitlist
+/docs                      Phlow API docs
+/about                     Product/company about
 
 Auth:
 /login                     Email + password login
@@ -573,10 +573,10 @@ TESSERACT_CMD=                       # full path on Windows, blank elsewhere
 UPLOAD_DIR=./uploads
 MAX_FILE_SIZE_MB=20
 MAX_FILES_PER_UPLOAD=50
-DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/pesobooks
+DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/phlow
 PAYMONGO_SECRET_KEY=sk_...
 PAYMONGO_WEBHOOK_SECRET=whsec_...
-CORS_ORIGINS=http://localhost:5173,https://claideco.work
+CORS_ORIGINS=http://localhost:5173,https://phlow.app
 ```
 
 ---

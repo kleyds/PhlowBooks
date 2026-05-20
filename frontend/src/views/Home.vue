@@ -2,15 +2,14 @@
   <div>
     <section class="hero">
       <div class="container">
-        <span class="badge">Claideco &middot; back-office tools for PH businesses</span>
-        <h1>Software that fits the way<br />work actually happens here.</h1>
+        <span class="badge">Phlow &middot; bookkeeping infrastructure for PH firms</span>
+        <h1>Receipts in.<br />Clean entries out.</h1>
         <p class="lead">
-          Claideco is an independent studio building back-office tools for Filipino bookkeepers,
-          accountants, and SMBs. Locally-aware, peso-priced, and built for BIR realities &mdash;
-          not American spreadsheets.
+          Phlow turns receipts, invoices, wallet screenshots, and bank documents into clean
+          accounting entries for Filipino bookkeepers and accounting firms.
         </p>
         <div class="cta">
-          <router-link to="/products" class="btn">See products</router-link>
+          <router-link to="/phlow" class="btn">Explore Phlow</router-link>
           <router-link to="/about" class="btn secondary">About us</router-link>
         </div>
       </div>
@@ -33,29 +32,29 @@
 
     <section class="container products-preview">
       <div class="section-head">
-        <h2>What we build</h2>
-        <router-link to="/products" class="see-all">See all products &rarr;</router-link>
+        <h2>Platform</h2>
+        <router-link to="/products" class="see-all">See the workflow &rarr;</router-link>
       </div>
       <div class="grid">
-        <router-link to="/pesobooks" class="product-card">
+        <router-link to="/phlow" class="product-card">
           <div class="product-icon">₱</div>
-          <h3>PesoBooks</h3>
+          <h3>Phlow</h3>
           <p>Bookkeeping infrastructure for Filipino accounting firms. Receipts in, clean entries out.</p>
           <span class="status live">Private beta</span>
         </router-link>
-        <div class="product-card disabled">
-          <div class="product-icon muted">?</div>
-          <h3>More on the way</h3>
-          <p>We're shipping one tool at a time. Got a problem you'd pay to have solved well? <router-link to="/about">Tell us.</router-link></p>
-          <span class="status soon">Soon</span>
-        </div>
+        <router-link to="/docs" class="product-card">
+          <div class="product-icon muted">API</div>
+          <h3>Developer access</h3>
+          <p>Power-user firms can connect directly to the extraction API when they need deeper workflow control.</p>
+          <span class="status soon">Docs</span>
+        </router-link>
       </div>
     </section>
 
     <section class="container cta-band">
       <div class="cta-inner">
         <h2>Like the approach?</h2>
-        <p>We work with a small number of design partners on each product before public release.</p>
+        <p>We work with a small number of design partners before public release.</p>
         <router-link to="/about" class="btn">Get in touch</router-link>
       </div>
     </section>

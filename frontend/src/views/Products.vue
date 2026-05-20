@@ -1,20 +1,20 @@
 <template>
   <div class="container products">
     <header>
-      <h1>Products</h1>
+      <h1>Platform</h1>
       <p class="lead">
-        Small, focused tools we run ourselves. Each one ships with an HTTP API and is
-        self-hostable on a single machine.
+        Phlow gives accounting firms a focused workflow for intake, extraction, review,
+        reconciliation, compliance exports, and client uploads.
       </p>
     </header>
 
     <div class="grid">
-      <router-link to="/pesobooks" class="card">
+      <router-link to="/phlow" class="card">
         <div class="card-head">
           <div class="icon">₱</div>
           <span class="status live">Pre-MVP</span>
         </div>
-        <h2>PesoBooks</h2>
+        <h2>Phlow</h2>
         <p class="tagline">Bookkeeping infrastructure for Filipino accounting firms.</p>
         <p class="desc">
           Receipts, invoices, wallet screenshots, and bank documents turned into
@@ -23,18 +23,19 @@
         <span class="link">Learn more &rarr;</span>
       </router-link>
 
-      <div class="card disabled">
+      <router-link to="/docs" class="card">
         <div class="card-head">
-          <div class="icon muted">?</div>
-          <span class="status soon">Planned</span>
+          <div class="icon muted">API</div>
+          <span class="status soon">Docs</span>
         </div>
-        <h2>Coming soon</h2>
-        <p class="tagline">Another tool, in the same opinionated mold.</p>
+        <h2>API access</h2>
+        <p class="tagline">Extraction endpoints for power-user firms.</p>
         <p class="desc">
-          We're shipping one product at a time and only adding the next when the current one
-          earns it. Tell us what you'd buy.
+          Upload receipts or invoices programmatically and receive PH-tuned structured fields
+          for your own internal systems.
         </p>
-      </div>
+        <span class="link">Read docs &rarr;</span>
+      </router-link>
 
       <div class="card disabled">
         <div class="card-head">
@@ -42,7 +43,7 @@
           <span class="status soon">Idea</span>
         </div>
         <h2>Got a problem?</h2>
-        <p class="tagline">We work with design partners on each new product.</p>
+        <p class="tagline">We work with design partners before public release.</p>
         <p class="desc">
           If you have a recurring back-office headache that a small, sharp tool would solve,
           <router-link to="/about">get in touch</router-link>.

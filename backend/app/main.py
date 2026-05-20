@@ -27,7 +27,7 @@ def _cors_origins() -> list[str]:
     return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 app = FastAPI(
-    title="PesoBooks API",
+    title="Phlow API",
     description="Bookkeeping infrastructure for Filipino accounting firms.",
     version="0.1.0",
 )
@@ -58,7 +58,7 @@ def on_startup():
 
 @app.get("/")
 def root():
-    return {"name": "PesoBooks API", "version": "0.1.0", "docs": "/docs"}
+    return {"name": "Phlow API", "version": "0.1.0", "docs": "/docs"}
 
 
 @app.get("/health")

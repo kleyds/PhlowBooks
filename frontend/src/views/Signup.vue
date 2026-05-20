@@ -1,7 +1,7 @@
 <template>
   <div class="auth-page">
     <section class="auth-panel">
-      <p class="eyebrow">PesoBooks</p>
+      <p class="eyebrow">Phlow</p>
 
       <template v-if="!submittedEmail">
         <h1>Create account</h1>

@@ -2,15 +2,15 @@
   <nav :class="{ 'app-nav': isAppRoute }">
     <div class="container nav-inner">
       <router-link :to="isAppRoute ? '/app' : '/'" class="brand">
-        <span class="logo">{{ isAppRoute ? 'P' : 'C' }}</span>
-        <span>{{ isAppRoute ? 'PesoBooks' : 'Claideco' }}</span>
+        <span class="logo">P</span>
+        <span>Phlow</span>
       </router-link>
       <div v-if="isAppRoute" class="links app-links">
         <router-link to="/app/clients/new" class="primary-link">New client</router-link>
         <button type="button" @click="logout">Log out</button>
       </div>
       <div v-else class="links">
-        <router-link to="/products">Products</router-link>
+        <router-link to="/products">Platform</router-link>
         <router-link to="/docs">Docs</router-link>
         <router-link to="/about">About</router-link>
         <router-link to="/login">Log in</router-link>

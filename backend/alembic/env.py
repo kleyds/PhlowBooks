@@ -25,7 +25,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-database_url = os.getenv("DATABASE_URL", "sqlite:///./pesobooks.db")
+database_url = os.getenv("DATABASE_URL", "sqlite:///./phlow.db")
 config.set_main_option("sqlalchemy.url", database_url)
 
 target_metadata = Base.metadata

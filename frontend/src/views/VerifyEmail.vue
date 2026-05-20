@@ -1,7 +1,7 @@
 <template>
   <div class="auth-page">
     <section class="auth-panel">
-      <p class="eyebrow">PesoBooks</p>
+      <p class="eyebrow">Phlow</p>
       <h1>Verify email</h1>
 
       <p v-if="status === 'pending'" class="info">Verifying your email...</p>

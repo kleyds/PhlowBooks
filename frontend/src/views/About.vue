@@ -1,11 +1,10 @@
 <template>
   <div class="container about">
     <header>
-      <h1>About Claideco</h1>
+      <h1>About Phlow</h1>
       <p class="lead">
-        An independent software studio of one (so far). We build back-office tools for
-        Filipino businesses &mdash; starting with <router-link to="/pesobooks">PesoBooks</router-link>,
-        bookkeeping infrastructure for accounting firms.
+        Phlow is bookkeeping infrastructure for Filipino accounting firms: intake, extraction,
+        review, reconciliation, and compliance support in one focused workspace.
       </p>
     </header>
 
@@ -18,7 +17,7 @@
         for them.
       </p>
       <p>
-        Claideco builds the missing layer: opinionated, locally-aware tools that fit the
+        Phlow builds the missing layer: opinionated, locally-aware tools that fit the
         way work actually happens here.
       </p>
     </section>
@@ -26,7 +25,7 @@
     <section>
       <h2>How we build</h2>
       <ul>
-        <li><strong>One product at a time.</strong> The next product only ships when the current one earns it.</li>
+        <li><strong>One workflow at a time.</strong> New capabilities ship when they make the core bookkeeping flow faster.</li>
         <li><strong>Local by design.</strong> Built for PH workflows, BIR formats, and PH banking statements first &mdash; not as an afterthought.</li>
         <li><strong>Sell the result, not the plumbing.</strong> Customers get hours back; the API is for power users underneath.</li>
         <li><strong>Opinionated defaults.</strong> Sensible behavior out of the box; few knobs to fiddle with.</li>
@@ -45,7 +44,7 @@
       <h2>Stack we use</h2>
       <ul>
         <li><strong>Python + FastAPI</strong> for backend APIs.</li>
-        <li><strong>Vue 3 + Vite</strong> for product UIs and this site.</li>
+        <li><strong>Vue 3 + Vite</strong> for the product UI and marketing pages.</li>
         <li><strong>PostgreSQL</strong> for persistence.</li>
         <li><strong>OpenAI</strong> and other models, called from our backend &mdash; never from the browser.</li>
       </ul>
@@ -55,10 +54,10 @@
       <h2>Get in touch</h2>
       <p>
         Are you a Filipino bookkeeper, accountant, or SMB owner with a back-office headache?
-        We work with a small group of design partners on each new product before public release.
+        We work with a small group of design partners before public release.
       </p>
       <p>
-        <a href="mailto:hello@claideco.work">hello@claideco.work</a>
+        <a href="mailto:hello@phlow.app">hello@phlow.app</a>
         &middot;
         <a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a>
       </p>

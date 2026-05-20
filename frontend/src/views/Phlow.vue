@@ -5,7 +5,7 @@
         <span class="badge">Pre-MVP &middot; Built for Philippine firms</span>
         <h1>Stop typing resibos.</h1>
         <p class="lead">
-          PesoBooks turns receipts, invoices, wallet screenshots, and bank documents into
+          Phlow turns receipts, invoices, wallet screenshots, and bank documents into
           clean accounting entries for Filipino bookkeepers who are tired of typing by hand.
         </p>
         <div class="cta">
@@ -50,7 +50,7 @@
         <li>
           <span class="step-num">2</span>
           <div>
-            <h3>PesoBooks reads them</h3>
+            <h3>Phlow reads them</h3>
             <p>Vendor name, TIN, OR/SI number, date, VAT type, vatable amount, VAT, total, and document type are extracted for review.</p>
           </div>
         </li>
@@ -72,11 +72,11 @@
     </section>
 
     <section class="container why">
-      <h2>Why PesoBooks (and not Hubdoc, Dext, or Textract)</h2>
+      <h2>Why Phlow (and not Hubdoc, Dext, or Textract)</h2>
       <div class="compare">
         <div class="compare-row head">
           <div></div>
-          <div>PesoBooks</div>
+          <div>Phlow</div>
           <div>Global tools</div>
         </div>
         <div class="compare-row">
@@ -239,7 +239,7 @@
           Thanks! We'll be in touch within a week.
         </p>
         <p class="hint">
-          Or email <a href="mailto:hello@claideco.work">hello@claideco.work</a> directly.
+          Or email <a href="mailto:hello@phlow.app">hello@phlow.app</a> directly.
         </p>
       </div>
     </section>

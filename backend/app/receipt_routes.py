@@ -427,7 +427,7 @@ def export_receipts(
     receipts = db.scalars(statement.order_by(Receipt.created_at.asc())).all()
     csv_text = _csv_for_receipts(receipts, format)
     filename_month = month or "all"
-    filename = f"pesobooks-client-{client_id}-{format}-{filename_month}.csv"
+    filename = f"phlow-client-{client_id}-{format}-{filename_month}.csv"
     return Response(
         content=csv_text,
         media_type="text/csv",

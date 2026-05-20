@@ -1,16 +1,16 @@
-# Claideco
+# Phlow
 
-Independent software studio building back-office tools for Filipino bookkeepers, accountants, and SMBs.
+Bookkeeping infrastructure for Filipino bookkeepers, accountants, and SMBs.
 
 This monorepo contains:
 
-- `frontend/` - `claideco.work` site and PesoBooks web app.
-- `backend/` - PesoBooks API built with FastAPI, SQLAlchemy on PostgreSQL, Tesseract OCR, and OpenAI extraction.
-- `PESOBOOKS_HANDOFF.md` - implementation handoff and next-work checklist.
+- `frontend/` - Phlow marketing site and web app.
+- `backend/` - Phlow API built with FastAPI, SQLAlchemy on PostgreSQL, Tesseract OCR, and OpenAI extraction.
+- `PHLOW_HANDOFF.md` - implementation handoff and next-work checklist.
 
-## PesoBooks
+## Phlow
 
-PesoBooks is bookkeeping infrastructure for Filipino accounting firms. It currently supports:
+Phlow is bookkeeping infrastructure for Filipino accounting firms. It currently supports:
 
 - Bookkeeper signup with email verification + JWT login.
 - Multi-client workspace.
@@ -45,8 +45,8 @@ PDF files are stored and previewed in-app as rendered page images with page navi
    - Windows: install via the EnterpriseDB installer.
    - Create a database and role, e.g.:
      ```sql
-     CREATE ROLE pesobooks WITH LOGIN PASSWORD 'pesobooks';
-     CREATE DATABASE pesobooks OWNER pesobooks;
+     CREATE ROLE phlow WITH LOGIN PASSWORD 'phlow';
+     CREATE DATABASE phlow OWNER phlow;
      ```
 4. Tesseract OCR.
    - Windows: install from UB-Mannheim builds and set `TESSERACT_CMD` if it is not on PATH.
@@ -81,7 +81,7 @@ MAX_FILE_SIZE_MB=20
 MAX_FILES_PER_UPLOAD=50
 
 # PostgreSQL is required.
-DATABASE_URL=postgresql+psycopg2://pesobooks:pesobooks@localhost:5432/pesobooks
+DATABASE_URL=postgresql+psycopg2://phlow:phlow@localhost:5432/phlow
 
 # SMTP for verification emails. With Gmail, SMTP_USER is your address
 # and SMTP_PASSWORD is a 16-character Google App Password.
@@ -98,7 +98,7 @@ FRONTEND_BASE_URL=http://localhost:5174
 > before starting the backend and set `DATABASE_URL` accordingly:
 >
 > ```text
-> DATABASE_URL=postgresql+psycopg2://user:pass@localhost:5432/pesobooks
+> DATABASE_URL=postgresql+psycopg2://user:pass@localhost:5432/phlow
 > ```
 
 > If `SMTP_HOST` is unset, registration still succeeds and the verification link is
@@ -155,7 +155,7 @@ Key routes:
 
 - `/`
 - `/products`
-- `/pesobooks`
+- `/phlow`
 - `/docs`
 - `/login`
 - `/signup`
@@ -264,7 +264,7 @@ Legacy endpoint:
 
 ## Next Work
 
-See `PESOBOOKS_HANDOFF.md` for the fuller handoff. High-priority next slices:
+See `PHLOW_HANDOFF.md` for the fuller handoff. High-priority next slices:
 
 - PostgreSQL production validation.
 - OCR processing success/error regression tests.
