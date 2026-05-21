@@ -15,10 +15,10 @@ PhlowBooks is bookkeeping infrastructure for Filipino accounting firms. It curre
 - Bookkeeper signup with email verification + JWT login.
 - Multi-client workspace.
 - Batch receipt/invoice upload.
-- Image/PDF OCR and PH/BIR-aware OpenAI extraction.
-- Review queue with editable extracted fields.
-- Receipt archive with filters and read-only modal document detail.
-- CSV export for Generic, QuickBooks, and Xero formats.
+- Image/PDF OCR and PH/BIR-aware OpenAI extraction, including TIN, OR/SI, ATP, and VAT fields.
+- Review queue with editable extracted fields and VAT sanity warnings.
+- Receipt archive with filters, read-only modal document detail, VAT checks, and receipt edit audit history.
+- CSV export for Generic, QuickBooks, and Xero formats; Generic exports include BIR fields.
 - Bank CSV import.
 - PH bank CSV template presets for Generic, BDO, BPI, Metrobank, and UnionBank imports.
 - Bank import duplicate skipping and row-level error reporting.
@@ -34,6 +34,16 @@ PhlowBooks is bookkeeping infrastructure for Filipino accounting firms. It curre
 - Client homepage "Back to workspace" confirmation; workflow tabs keep direct "Back to client" navigation.
 
 PDF files are stored and previewed in-app as rendered page images with page navigation. PyMuPDF extracts embedded PDF text and renders scanned PDF pages; Tesseract OCR is required for image OCR and scanned PDF page OCR.
+
+### BIR Trust Layer
+
+PhlowBooks prepares BIR-ready working files, not direct BIR filing submissions. The current trust layer includes:
+
+- ATP number extraction, review, archive display, and Generic CSV export.
+- VAT sanity warnings when captured VAT differs from 12% of VATable amount by more than ₱1.
+- Receipt edit audit history for manual status, field, and line-item changes.
+- Compliance CSV exports for SLSP, SAWT, and 4-column journal workflows.
+- Deadline reminders based on a static monthly/quarterly BIR schedule.
 
 ## Prerequisites
 
@@ -128,7 +138,7 @@ Run backend regression tests:
 .\.venv\Scripts\python.exe -m pytest tests
 ```
 
-Current regression coverage includes reconciliation and Form 2307 tracking, PDF page previews, portal comments, dashboard metrics, upload limits, BIR export CSVs/deadlines, and auth/email verification.
+Current regression coverage includes reconciliation and Form 2307 tracking, PDF page previews, portal comments, dashboard metrics, upload limits, BIR export CSVs/deadlines, receipt ATP/VAT audit history, and auth/email verification.
 
 API docs:
 
@@ -189,7 +199,7 @@ cd frontend
 npm.cmd run build
 ```
 
-Recent UI verification should include the client homepage confirmation modal, workflow tab navigation labels, global date/month picker icons on dark inputs, and the bank reconciliation CSV import layout.
+Recent UI verification should include the client homepage confirmation modal, workflow tab navigation labels, global date/month picker icons on dark inputs, the bank reconciliation CSV import layout, review-page ATP/VAT warnings, and archive detail audit history.
 
 ## Important API Areas
 
@@ -220,13 +230,14 @@ Receipts:
 - `GET /v1/receipts/{id}/file` (Authorization header)
 - `GET /v1/receipts/{id}/preview?page=1` (Authorization header; PDFs return page-count headers)
 - `PATCH /v1/receipts/{id}`
+- `GET /v1/receipts/{id}/audit-logs`
 - `GET /v1/receipts/{id}/comments`
 - `POST /v1/receipts/{id}/comments`
 - `POST /v1/receipts/{id}/comments/read`
 
 Exports:
 
-- `GET /v1/clients/{id}/export?format=generic|qbo|xero`
+- `GET /v1/clients/{id}/export?format=generic|qbo|xero` (Generic includes PH/BIR fields such as TIN, OR/SI, ATP, VAT type, VATable amount, and VAT amount)
 - `GET /v1/clients/{id}/exports/slsp?quarter=YYYY-Qn`
 - `GET /v1/clients/{id}/exports/sawt?quarter=YYYY-Qn`
 - `GET /v1/clients/{id}/exports/journal?month=YYYY-MM`
@@ -268,5 +279,7 @@ See `PHLOWBOOKS_HANDOFF.md` for the fuller handoff. High-priority next slices:
 
 - PostgreSQL production validation.
 - OCR processing success/error regression tests.
-- Bank CSV import and receipt review/export filter regression tests.
+- Receipt file duplicate detection before BIR export totals can be considered safer against double-counting.
+- Bank CSV import edge-case regression tests.
+- Exact official BIR import-format validation if the product promise moves beyond working CSVs.
 - Docker deployment setup.

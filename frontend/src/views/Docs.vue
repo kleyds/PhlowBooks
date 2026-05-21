@@ -76,6 +76,7 @@ print(res.json())</code></pre>
     "vendor_tin":      "string | null",
     "or_number":       "string | null",
     "si_number":       "string | null",
+    "atp_number":      "string | null",
     "date":            "YYYY-MM-DD | null",
     "currency":        "PHP",
     "subtotal":        "number | null",

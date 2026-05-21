@@ -68,6 +68,10 @@
         <span>Low confidence</span>
         <strong>{{ lowConfidenceCount }}</strong>
       </div>
+      <div>
+        <span>VAT warnings</span>
+        <strong>{{ vatWarningCount }}</strong>
+      </div>
     </section>
 
     <section class="export-panel">
@@ -104,6 +108,7 @@
             <th>Doc type</th>
             <th>VAT</th>
             <th>Total</th>
+            <th>Checks</th>
             <th>Confidence</th>
             <th></th>
           </tr>
@@ -120,6 +125,11 @@
             <td>{{ label(receipt.data?.doc_type) }}</td>
             <td>{{ label(receipt.data?.vat_type) }}</td>
             <td>{{ formatAmount(receipt.data?.total, receipt.data?.currency) }}</td>
+            <td>
+              <span :class="['check-pill', vatCheckClass(receipt.data)]">
+                {{ vatCheckLabel(receipt.data) }}
+              </span>
+            </td>
             <td>
               <span :class="['confidence', confidenceClass(receipt.data?.confidence)]">
                 {{ formatConfidence(receipt.data?.confidence) }}
@@ -209,6 +219,10 @@
                 <dd>{{ selectedReceipt.data?.si_number || '-' }}</dd>
               </div>
               <div>
+                <dt>ATP number</dt>
+                <dd>{{ selectedReceipt.data?.atp_number || '-' }}</dd>
+              </div>
+              <div>
                 <dt>Document type</dt>
                 <dd>{{ label(selectedReceipt.data?.doc_type) }}</dd>
               </div>
@@ -223,6 +237,17 @@
               <div>
                 <dt>VAT amount</dt>
                 <dd>{{ formatAmount(selectedReceipt.data?.vat_amount, selectedReceipt.data?.currency) }}</dd>
+              </div>
+              <div>
+                <dt>VAT check</dt>
+                <dd>
+                  <span :class="['check-pill', vatCheckClass(selectedReceipt.data)]">
+                    {{ vatCheckLabel(selectedReceipt.data) }}
+                  </span>
+                  <span v-if="selectedReceipt.data?.vat_sanity_message" class="check-message">
+                    {{ selectedReceipt.data.vat_sanity_message }}
+                  </span>
+                </dd>
               </div>
               <div>
                 <dt>Subtotal</dt>
@@ -265,6 +290,32 @@
               </table>
             </section>
 
+            <section class="audit-log">
+              <h3>Audit history</h3>
+              <div v-if="loadingAuditLogs" class="empty">Loading audit history...</div>
+              <div v-else-if="auditLogs.length === 0" class="empty">No manual field edits recorded.</div>
+              <table v-else>
+                <thead>
+                  <tr>
+                    <th>When</th>
+                    <th>Who</th>
+                    <th>Field</th>
+                    <th>Old</th>
+                    <th>New</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="entry in auditLogs" :key="entry.id">
+                    <td>{{ formatDateTime(entry.created_at) }}</td>
+                    <td>{{ entry.actor_name || `User #${entry.user_id}` }}</td>
+                    <td>{{ formatAuditField(entry.field_name) }}</td>
+                    <td>{{ formatAuditValue(entry.old_value) }}</td>
+                    <td>{{ formatAuditValue(entry.new_value) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
             <section class="raw-text">
               <h3>Raw OCR text</h3>
               <textarea :value="selectedReceipt.raw_text || 'No OCR text captured.'" readonly rows="8" />
@@ -287,7 +338,9 @@ const clientId = route.params.id
 const client = ref(null)
 const receipts = ref([])
 const selectedReceipt = ref(null)
+const auditLogs = ref([])
 const loading = ref(true)
+const loadingAuditLogs = ref(false)
 const error = ref('')
 const exportFormat = ref('generic')
 const previewZoom = ref(1)
@@ -302,6 +355,9 @@ const totalAmount = computed(() =>
 )
 const lowConfidenceCount = computed(() =>
   receipts.value.filter((receipt) => receipt.data?.confidence !== null && receipt.data?.confidence < 0.9).length
+)
+const vatWarningCount = computed(() =>
+  receipts.value.filter((receipt) => receipt.data?.vat_sanity_status === 'warning').length
 )
 
 onMounted(async () => {
@@ -398,15 +454,24 @@ async function openReceipt(receipt) {
   previewZoom.value = 1
   previewPage.value = 1
   previewPageCount.value = null
+  loadingAuditLogs.value = true
   try {
-    selectedReceipt.value = await apiFetch(`/receipts/${receipt.id}`)
+    const [receiptData, auditData] = await Promise.all([
+      apiFetch(`/receipts/${receipt.id}`),
+      apiFetch(`/receipts/${receipt.id}/audit-logs`),
+    ])
+    auditLogs.value = auditData.audit_logs || []
+    selectedReceipt.value = receiptData
   } catch (err) {
     handleError(err)
+  } finally {
+    loadingAuditLogs.value = false
   }
 }
 
 function closeReceipt() {
   selectedReceipt.value = null
+  auditLogs.value = []
 }
 
 function onKeydown(event) {
@@ -512,6 +577,27 @@ function confidenceClass(value) {
   if (value < 0.75) return 'low'
   if (value < 0.9) return 'medium'
   return 'high'
+}
+
+function vatCheckClass(data) {
+  if (data?.vat_sanity_status === 'warning') return 'warning'
+  if (data?.vat_sanity_status === 'ok') return 'ok'
+  return 'neutral'
+}
+
+function vatCheckLabel(data) {
+  if (data?.vat_sanity_status === 'warning') return 'VAT warning'
+  if (data?.vat_sanity_status === 'ok') return 'VAT OK'
+  return '-'
+}
+
+function formatAuditField(fieldName) {
+  return fieldName.replace(/^receipt_data\./, '').replace(/^receipt\./, '').replaceAll('_', ' ')
+}
+
+function formatAuditValue(value) {
+  if (value === null || value === undefined || value === '') return '-'
+  return value
 }
 </script>
 
@@ -698,6 +784,31 @@ tr.selected td {
   background: rgba(148, 163, 184, 0.08);
   color: var(--workflow-muted);
 }
+.check-pill {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.82em;
+  padding: 3px 8px;
+  width: fit-content;
+}
+.check-pill.ok {
+  background: rgba(34, 197, 94, 0.14);
+  color: #86efac;
+}
+.check-pill.warning {
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde68a;
+}
+.check-pill.neutral {
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--workflow-muted);
+}
+.check-message {
+  color: #fde68a;
+  display: block;
+  font-size: 0.86em;
+  margin-top: 6px;
+}
 .empty {
   color: var(--workflow-muted);
   padding: 18px 0;
@@ -834,6 +945,7 @@ dd {
   color: var(--workflow-text);
 }
 .line-items,
+.audit-log,
 .raw-text {
   background: var(--workflow-input);
   border: 1px solid var(--workflow-soft-line);
@@ -841,9 +953,13 @@ dd {
   padding: 14px;
 }
 .line-items h3,
+.audit-log h3,
 .raw-text h3 {
   font-size: 1em;
   margin-bottom: 10px;
+}
+.audit-log td {
+  overflow-wrap: anywhere;
 }
 .raw-text textarea {
   background: var(--workflow-panel);

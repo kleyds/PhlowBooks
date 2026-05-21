@@ -68,17 +68,22 @@ Stack:
 - PH/BIR extraction fields:
   - vendor TIN
   - OR/SI number
+  - ATP number
   - VAT type
   - VATable amount
   - VAT amount
   - document type
   - confidence
+- Receipt review/archive surfaces VAT sanity warnings when captured VAT differs from 12% of VATable amount by more than ₱1
+- `GET /v1/receipts/{id}/audit-logs` returns manual receipt status/data/line item edit history with actor and timestamp
 
 ### Review Queue
 - `GET /v1/clients/{id}/receipts/queue`
 - `PATCH /v1/receipts/{id}`
 - `/app/clients/:id/review`
 - Side-by-side document and editable fields
+- ATP number is editable alongside TIN, OR, SI, VAT, and document-type fields
+- VAT sanity warning appears before approval when captured VAT is materially off from 12% of VATable amount
 - Approve/reject flow
 - Retry OCR action for failed receipts
 - Confidence highlighting
@@ -110,6 +115,8 @@ Stack:
   - zoom controls
   - fixed popup header with internal detail scrolling
   - extracted BIR fields
+  - VAT sanity check status/message
+  - receipt edit audit history
   - line items
   - raw OCR text
 - Protected receipt previews are served through app-rendered image/PDF page previews; 2307 file responses are served inline for browser preview
@@ -212,7 +219,7 @@ Backend:
 - `backend/app/extract.py`
 - `backend/app/ocr.py`
 - `backend/alembic/env.py`
-- `backend/alembic/versions/` (`5c15a1fe35aa` baseline, `c6cda2519628` upload links, `e864ea5fcdb6` user verification, `f43a9d2b7c10` receipt comments)
+- `backend/alembic/versions/` (`5c15a1fe35aa` baseline, `c6cda2519628` upload links, `e864ea5fcdb6` user verification, `f43a9d2b7c10` receipt comments, `b7e4c1d2a9f0` BIR trust layer)
 
 Frontend:
 - `frontend/src/api.js`
@@ -242,7 +249,9 @@ Frontend:
 
 High priority:
 - PostgreSQL production validation
-- Broaden automated regression tests beyond the current API coverage, especially OCR processing success/error paths, bank CSV import edge cases, and receipt review/export filters
+- Receipt file duplicate detection so approved-export totals are protected against accidental double-counting
+- Broaden automated regression tests beyond the current API coverage, especially OCR processing success/error paths and bank CSV import edge cases
+- Validate exact BIR import/file-format requirements before promising official filing-ready files instead of reviewable working CSVs
 
 ### BIR Compliance
 - `GET /v1/clients/{id}/exports/slsp?quarter=YYYY-Qn` — Summary List of Purchases CSV grouped by supplier TIN
@@ -250,6 +259,7 @@ High priority:
 - `GET /v1/clients/{id}/exports/journal?month=YYYY-MM` — 4-column journal CSV with input VAT split when present
 - `GET /v1/clients/{id}/compliance/deadlines` — Static schedule of monthly/quarterly BIR forms in the next 120 days
 - `/app/clients/:id/compliance` page surfaces the four exports and a deadline table
+- Generic receipt exports include ATP number alongside TIN, OR/SI, and VAT fields
 
 ## Recommended Next Product Slices
 
@@ -266,8 +276,8 @@ High priority:
    - production CORS/secret handling
 
 3. Regression test suite
-   - Current backend API coverage: reconciliation matching and 2307 tracking, PDF multi-page preview, portal comments and notification path, dashboard metrics, upload limits, BIR export CSVs/deadlines, auth/email verification
-   - Next coverage candidates: OCR processing success/error paths, bank CSV import edge cases, receipt review edits/export filters
+   - Current backend API coverage: reconciliation matching and 2307 tracking, PDF multi-page preview, portal comments and notification path, dashboard metrics, upload limits, BIR export CSVs/deadlines, receipt ATP/VAT audit history, auth/email verification
+   - Next coverage candidates: OCR processing success/error paths, bank CSV import edge cases, receipt duplicate detection, and frontend interaction checks for review/archive trust-layer UI
 
 ## Current Test Commands
 

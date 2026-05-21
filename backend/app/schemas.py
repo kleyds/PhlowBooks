@@ -16,6 +16,7 @@ class ReceiptData(BaseModel):
     vendor_tin: Optional[str] = Field(None, description="Philippine TIN, if visible")
     or_number: Optional[str] = Field(None, description="Official Receipt number")
     si_number: Optional[str] = Field(None, description="Sales Invoice number")
+    atp_number: Optional[str] = Field(None, description="BIR Authority to Print number, if visible")
     date: Optional[str] = Field(None, description="ISO date YYYY-MM-DD")
     currency: Optional[str] = Field("PHP", description="ISO 4217 currency code")
     subtotal: Optional[float] = None
@@ -135,6 +136,7 @@ class ReceiptDataPublic(BaseModel):
     vendor_tin: Optional[str] = None
     or_number: Optional[str] = None
     si_number: Optional[str] = None
+    atp_number: Optional[str] = None
     date: Optional[str] = None
     currency: Optional[str] = "PHP"
     subtotal: Optional[float] = None
@@ -145,6 +147,8 @@ class ReceiptDataPublic(BaseModel):
     total: Optional[float] = None
     doc_type: Optional[str] = None
     confidence: Optional[float] = None
+    vat_sanity_status: Optional[str] = None
+    vat_sanity_message: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -154,6 +158,7 @@ class ReceiptDataUpdate(BaseModel):
     vendor_tin: Optional[str] = None
     or_number: Optional[str] = None
     si_number: Optional[str] = None
+    atp_number: Optional[str] = None
     date: Optional[str] = None
     currency: Optional[str] = "PHP"
     subtotal: Optional[float] = None
@@ -195,6 +200,23 @@ class ReceiptCommentCreateRequest(BaseModel):
 
 class ReceiptCommentsResponse(BaseModel):
     comments: List[ReceiptCommentPublic]
+
+
+class ReceiptAuditLogPublic(BaseModel):
+    id: int
+    receipt_id: int
+    user_id: int
+    actor_name: Optional[str] = None
+    field_name: str
+    old_value: Optional[str] = None
+    new_value: Optional[str] = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ReceiptAuditLogsResponse(BaseModel):
+    audit_logs: List[ReceiptAuditLogPublic]
 
 
 class ReceiptPublic(BaseModel):

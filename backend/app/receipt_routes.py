@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import io
+import json
 import os
 import uuid
 from datetime import datetime
@@ -17,10 +18,11 @@ from sqlalchemy.orm import Session, selectinload
 from app.auth import get_current_user
 from app.database import SessionLocal, get_db
 from app.extract import extract_receipt
-from app.models import Client, LineItemRecord, Receipt, ReceiptComment, ReceiptDataRecord, User
+from app.models import Client, LineItemRecord, Receipt, ReceiptAuditLog, ReceiptComment, ReceiptDataRecord, User
 from app.ocr import image_to_text, pdf_to_text
 from app.schemas import (
     ReceiptPatchRequest,
+    ReceiptAuditLogsResponse,
     ReceiptCommentCreateRequest,
     ReceiptCommentPublic,
     ReceiptCommentsResponse,
@@ -186,6 +188,7 @@ def _csv_for_receipts(receipts: list[Receipt], export_format: str) -> str:
         "vendor_tin",
         "or_number",
         "si_number",
+        "atp_number",
         "currency",
         "subtotal",
         "tax",
@@ -205,6 +208,7 @@ def _csv_for_receipts(receipts: list[Receipt], export_format: str) -> str:
             receipt.data.vendor_tin if receipt.data else "",
             receipt.data.or_number if receipt.data else "",
             receipt.data.si_number if receipt.data else "",
+            receipt.data.atp_number if receipt.data else "",
             receipt.data.currency if receipt.data else "PHP",
             receipt.data.subtotal if receipt.data else "",
             receipt.data.tax if receipt.data else "",
@@ -258,6 +262,52 @@ def _clean_comment_body(body: str) -> str:
     if len(cleaned) > 2000:
         raise HTTPException(422, "Comment is too long")
     return cleaned
+
+
+def _audit_value(value: Optional[object]) -> Optional[str]:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, default=str, sort_keys=True)
+    return str(value)
+
+
+def _record_audit_log(
+    db: Session,
+    receipt: Receipt,
+    user: User,
+    field_name: str,
+    old_value: Optional[object],
+    new_value: Optional[object],
+) -> None:
+    old_serialized = _audit_value(old_value)
+    new_serialized = _audit_value(new_value)
+    if old_serialized == new_serialized:
+        return
+    db.add(
+        ReceiptAuditLog(
+            receipt_id=receipt.id,
+            client_id=receipt.client_id,
+            user_id=user.id,
+            field_name=field_name,
+            old_value=old_serialized,
+            new_value=new_serialized,
+        )
+    )
+
+
+def _line_item_snapshot(line_items: list[LineItemRecord]) -> list[dict[str, Optional[object]]]:
+    return [
+        {
+            "description": item.description,
+            "quantity": item.quantity,
+            "unit_price": item.unit_price,
+            "total": item.total,
+        }
+        for item in line_items
+    ]
 
 
 def process_receipt(receipt_id: int) -> None:
@@ -479,6 +529,22 @@ def list_receipt_comments(
     return ReceiptCommentsResponse(comments=comments)
 
 
+@router.get("/receipts/{receipt_id}/audit-logs", response_model=ReceiptAuditLogsResponse)
+def list_receipt_audit_logs(
+    receipt_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    _receipt_or_404(receipt_id, current_user.id, db)
+    audit_logs = db.scalars(
+        select(ReceiptAuditLog)
+        .options(selectinload(ReceiptAuditLog.actor))
+        .where(ReceiptAuditLog.receipt_id == receipt_id, ReceiptAuditLog.user_id == current_user.id)
+        .order_by(ReceiptAuditLog.created_at.desc(), ReceiptAuditLog.id.desc())
+    ).all()
+    return ReceiptAuditLogsResponse(audit_logs=audit_logs)
+
+
 @router.post("/receipts/{receipt_id}/comments", response_model=ReceiptCommentPublic, status_code=201)
 def create_receipt_comment(
     receipt_id: int,
@@ -603,6 +669,7 @@ def update_receipt(
     if payload.status is not None:
         if payload.status not in {"pending", "processing", "done", "error", "approved", "rejected"}:
             raise HTTPException(422, "Invalid receipt status")
+        _record_audit_log(db, receipt, current_user, "receipt.status", receipt.status, payload.status)
         receipt.status = payload.status
         if payload.status in {"done", "approved", "rejected", "error"}:
             receipt.processed_at = datetime.utcnow()
@@ -612,10 +679,29 @@ def update_receipt(
         if receipt.data is None:
             receipt.data = ReceiptDataRecord(receipt_id=receipt.id, raw_json=data_payload)
         for key, value in data_payload.items():
+            _record_audit_log(
+                db,
+                receipt,
+                current_user,
+                f"receipt_data.{key}",
+                getattr(receipt.data, key),
+                value,
+            )
             setattr(receipt.data, key, value)
         receipt.data.raw_json = data_payload
 
     if payload.line_items is not None:
+        old_line_items = _line_item_snapshot(receipt.line_items)
+        new_line_items = [
+            {
+                "description": item.description,
+                "quantity": item.quantity,
+                "unit_price": item.unit_price,
+                "total": item.total,
+            }
+            for item in payload.line_items
+        ]
+        _record_audit_log(db, receipt, current_user, "line_items", old_line_items, new_line_items)
         receipt.line_items = [
             LineItemRecord(
                 receipt_id=receipt.id,

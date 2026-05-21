@@ -13,7 +13,7 @@ Rules:
 - Dates must be ISO format YYYY-MM-DD.
 - Currency must be a 3-letter ISO 4217 code. Default to PHP for Philippine documents.
 - Numbers must be plain numeric values, never strings, never with currency symbols.
-- Extract BIR-specific fields when visible: vendor_tin, or_number, si_number, vat_type, vatable_amount, vat_amount.
+- Extract BIR-specific fields when visible: vendor_tin, or_number, si_number, atp_number, vat_type, vatable_amount, vat_amount.
 - vat_type must be one of: vatable, zero_rated, exempt, non_vat.
 - doc_type must be one of: official_receipt, sales_invoice, gcash, maya, bank_statement, other.
 - For GCash, Maya, or bank screenshots/statements, focus on payee/vendor, date, amount, reference/OR/SI numbers if visible, doc_type, and confidence.

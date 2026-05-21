@@ -82,6 +82,11 @@ class Receipt(Base):
         cascade="all, delete-orphan",
         order_by="ReceiptComment.created_at.asc()",
     )
+    audit_logs: Mapped[list["ReceiptAuditLog"]] = relationship(
+        back_populates="receipt",
+        cascade="all, delete-orphan",
+        order_by="ReceiptAuditLog.created_at.desc()",
+    )
 
     @property
     def comment_count(self) -> int:
@@ -113,6 +118,7 @@ class ReceiptDataRecord(Base):
     vendor_tin: Mapped[Optional[str]] = mapped_column(String(25), nullable=True)
     or_number: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     si_number: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    atp_number: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     date: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
     currency: Mapped[Optional[str]] = mapped_column(String(3), default="PHP", nullable=True)
     subtotal: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
@@ -126,6 +132,24 @@ class ReceiptDataRecord(Base):
     raw_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
 
     receipt: Mapped[Receipt] = relationship(back_populates="data")
+
+    @property
+    def vat_sanity_status(self) -> Optional[str]:
+        if self.vatable_amount is None or self.vat_amount is None:
+            return None
+        if (self.vat_type or "").lower() in {"zero_rated", "exempt", "non_vat"} and self.vat_amount == 0:
+            return None
+        expected = round(self.vatable_amount * 0.12, 2)
+        difference = round(self.vat_amount - expected, 2)
+        return "warning" if abs(difference) > 1 else "ok"
+
+    @property
+    def vat_sanity_message(self) -> Optional[str]:
+        if self.vat_sanity_status != "warning" or self.vatable_amount is None or self.vat_amount is None:
+            return None
+        expected = round(self.vatable_amount * 0.12, 2)
+        difference = round(self.vat_amount - expected, 2)
+        return f"Expected VAT around {expected:.2f}; captured {self.vat_amount:.2f} ({difference:+.2f})."
 
 
 class LineItemRecord(Base):
@@ -157,6 +181,27 @@ class ReceiptComment(Base):
     receipt: Mapped[Receipt] = relationship(back_populates="comments")
     client: Mapped[Client] = relationship()
     owner: Mapped[User] = relationship()
+
+
+class ReceiptAuditLog(Base):
+    __tablename__ = "receipt_audit_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    receipt_id: Mapped[int] = mapped_column(ForeignKey("receipts.id"), index=True, nullable=False)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
+    field_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    old_value: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    new_value: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+
+    receipt: Mapped[Receipt] = relationship(back_populates="audit_logs")
+    client: Mapped[Client] = relationship()
+    actor: Mapped[User] = relationship()
+
+    @property
+    def actor_name(self) -> Optional[str]:
+        return self.actor.name if self.actor else None
 
 
 class BankTransaction(Base):

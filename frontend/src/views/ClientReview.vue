@@ -107,6 +107,10 @@
             <input v-model="form.si_number" type="text" />
           </label>
         </div>
+        <label :class="fieldClass">
+          ATP number
+          <input v-model="form.atp_number" type="text" />
+        </label>
         <div class="two-col">
           <label :class="fieldClass">
             Date
@@ -151,6 +155,9 @@
             <input v-model.number="form.vat_amount" type="number" step="0.01" />
           </label>
         </div>
+        <p v-if="vatSanity.status === 'warning'" class="vat-warning">
+          {{ vatSanity.message }}
+        </p>
         <div class="two-col">
           <label :class="fieldClass">
             Subtotal
@@ -214,6 +221,7 @@ const fieldClass = computed(() => ({
   caution: confidence.value !== null && confidence.value < 0.9,
   danger: confidence.value !== null && confidence.value < 0.75,
 }))
+const vatSanity = computed(() => calculateVatSanity(form))
 
 onMounted(async () => {
   await loadQueue()
@@ -261,6 +269,7 @@ function emptyForm() {
     vendor_tin: '',
     or_number: '',
     si_number: '',
+    atp_number: '',
     date: '',
     currency: 'PHP',
     subtotal: null,
@@ -389,6 +398,29 @@ function normalizeForm() {
   data.currency = data.currency || 'PHP'
   data.confidence = confidence.value
   return data
+}
+
+function calculateVatSanity(data) {
+  const vatable = Number(data.vatable_amount)
+  const vat = Number(data.vat_amount)
+  if (!Number.isFinite(vatable) || !Number.isFinite(vat)) return { status: null, message: '' }
+  if (['zero_rated', 'exempt', 'non_vat'].includes(data.vat_type) && vat === 0) {
+    return { status: null, message: '' }
+  }
+  const expected = Math.round(vatable * 0.12 * 100) / 100
+  const difference = Math.round((vat - expected) * 100) / 100
+  if (Math.abs(difference) <= 1) return { status: 'ok', message: '' }
+  return {
+    status: 'warning',
+    message: `VAT check: expected around ${formatPlainAmount(expected)}, captured ${formatPlainAmount(vat)} (${difference >= 0 ? '+' : ''}${formatPlainAmount(difference)}).`,
+  }
+}
+
+function formatPlainAmount(value) {
+  return new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: form.currency || 'PHP',
+  }).format(value)
 }
 
 function onKeydown(event) {
@@ -602,7 +634,8 @@ button:hover:not(:disabled) {
   color: var(--workflow-muted);
   font-size: 0.9em;
 }
-.extraction-note {
+.extraction-note,
+.vat-warning {
   background: rgba(250, 204, 21, 0.09);
   border: 1px solid rgba(250, 204, 21, 0.24);
   border-radius: 8px;

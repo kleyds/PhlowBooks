@@ -82,6 +82,10 @@ _RECEIPT_COLUMNS: dict[str, str] = {
     "upload_link_id": "INTEGER",
 }
 
+_RECEIPT_DATA_COLUMNS: dict[str, str] = {
+    "atp_number": "VARCHAR(100)",
+}
+
 _ALLOWED_COLUMN_NAME = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
 
 
@@ -139,6 +143,7 @@ def init_db() -> None:
         _add_missing_columns("reconciliations", _RECONCILIATION_COLUMNS)
         _add_missing_columns("users", _USER_COLUMNS)
         _add_missing_columns("receipts", _RECEIPT_COLUMNS)
+        _add_missing_columns("receipt_data", _RECEIPT_DATA_COLUMNS)
         Base.metadata.create_all(bind=engine)
         command.stamp(cfg, "head")
     else:
